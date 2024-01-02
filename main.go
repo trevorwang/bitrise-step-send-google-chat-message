@@ -1,31 +1,56 @@
 package main
 
 import (
-	"fmt"
 	"os"
-	"os/exec"
+
+	"github.com/bitrise-io/go-steputils/v2/stepconf"
+	"github.com/bitrise-io/go-utils/pathutil"
+	"github.com/bitrise-io/go-utils/v2/command"
+	"github.com/bitrise-io/go-utils/v2/env"
+	exit "github.com/bitrise-io/go-utils/v2/exitcode"
+	"github.com/bitrise-io/go-utils/v2/log"
 )
 
 func main() {
-	fmt.Println("This is the value specified for the input 'example_step_input':", os.Getenv("example_step_input"))
+	exitCode := run()
+	os.Exit(int(exitCode))
+}
 
-	//
-	// --- Step Outputs: Export Environment Variables for other Steps:
-	// You can export Environment Variables for other Steps with
-	//  envman, which is automatically installed by `bitrise setup`.
-	// A very simple example:
-	cmdLog, err := exec.Command("bitrise", "envman", "add", "--key", "EXAMPLE_STEP_OUTPUT", "--value", "the value you want to share").CombinedOutput()
+func run() exit.ExitCode {
+	logger := log.NewLogger()
+	logger.EnableDebugLog(Debugable)
+	runner := createStep(logger)
+	cfg, err := runner.ProcessConfig()
 	if err != nil {
-		fmt.Printf("Failed to expose output with envman, error: %#v | output: %s", err, cmdLog)
-		os.Exit(1)
+		logger.Errorf("Found error: %s", err)
+		return exit.Failure
 	}
-	// You can find more usage examples on envman's GitHub page
-	//  at: https://github.com/bitrise-io/envman
+	logger.Debugf("cfg: %#v", cfg)
+	runner.Run(&cfg)
+	return exit.Success
+}
 
-	//
-	// --- Exit codes:
-	// The exit code of your Step is very important. If you return
-	//  with a 0 exit code `bitrise` will register your Step as "successful".
-	// Any non zero exit code will be registered as "failed" by `bitrise`.
-	os.Exit(0)
+func createStep(logger log.Logger) *ChatRunner {
+	envRepository := env.NewRepository()
+	inputParser := stepconf.NewInputParser(envRepository)
+	cmdFactory := command.NewFactory(envRepository)
+	cmdLocator := env.NewCommandLocator()
+	pathModifier := pathutil.NewPathModifier()
+
+	return &ChatRunner{
+		logger:       logger,
+		inputParser:  inputParser,
+		cmdFactory:   cmdFactory,
+		cmdLocator:   cmdLocator,
+		pathModifier: pathModifier,
+	}
+
+}
+
+type ChatRunner struct {
+	logger       log.Logger
+	cmdFactory   command.Factory
+	inputParser  stepconf.InputParser
+	cmdLocator   env.CommandLocator
+	pathModifier pathutil.PathModifier
 }

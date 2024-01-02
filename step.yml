@@ -10,9 +10,9 @@
 title: |-
   Send Google Chat message
 summary: |
-   Send message to google chat
+  Send message to google chat
 description: |
-   Send message to google chat
+  Send message to google chat
 website: https://github.com/trevorwang/bitrise-step-send-google-chat-message
 source_code_url: https://github.com/trevorwang/bitrise-step-send-google-chat-message
 support_url: https://github.com/trevorwang/bitrise-step-send-google-chat-message/issues
@@ -60,29 +60,88 @@ type_tags:
 #   apt_get:
 #   - name: cmake
 
-
 toolkit:
   go:
     package_name: github.com/trevorwang/bitrise-step-send-google-chat-message
 
-
 inputs:
-  - example_step_input: Default Value - you can leave this empty if you want to
+  - google_chat_webhook_url: $GOOGLE_CHAT_WEBHOOK_URL
     opts:
-      title: "Example Step Input"
-      summary: Summary. No more than 2-3 sentences.
+      title: Google Chat Webhook URL
+      summary: Google Chat Webhook URL
       description: |
-        Description of this input.
-
-        Can be Markdown formatted text.
-      is_expand: true
+        Google Chat Webhook URL
       is_required: true
-      value_options: []
+      is_expand: true
+  - bitrise_personal_access_token: $BITRISE_PERSONAL_ACCESS_TOKEN
+    opts:
+      title: Bitrise Personal Access Token
+      summary: Bitrise Personal Access Token
+      description: |
+        Bitrise Personal Access Token
+      is_required: true
+      is_expand: true
+  - bitrise_app_slug: $BITRISE_APP_SLUG
+    opts:
+      title: Bitrise App Slug
+      summary: Bitrise App Slug
+      description: |
+        Bitrise App Slug
+      is_required: true
+      is_expand: true
 
+  - bitrise_build_slug: $BITRISE_BUILD_SLUG
+    opts:
+      title: Bitrise Build Slug
+      summary: Bitrise Build Slug
+      description: |
+        Bitrise Build Slug
+      is_required: true
+      is_expand: true
+  - bitrise_git_message: $BITRISE_GIT_MESSAGE
+    opts:
+      title: Bitrise Git Message
+      summary: Bitrise Git Message
+      description: |
+        Bitrise Git Message
+      is_required: false
+      is_expand: true
+  - bitrise_app_title: $BITRISE_APP_TITLE
+    opts:
+      title: Bitrise App Title
+      summary: Bitrise App Title
+      description: |
+        Bitrise App Title
+      is_required: true
+      is_expand: true
+  - bitrise_git_branch: $BITRISE_GIT_BRANCH
+    opts:
+      title: Bitrise Git Branch
+      summary: Bitrise Git Branch
+      description: |
+        Bitrise Git Branch
+      is_required: true
+      is_expand: true
+  - appcenter_deploy_release_id: $APPCENTER_DEPLOY_RELEASE_ID
+    opts:
+      title: Appcenter Deploy Release ID
+      summary: Appcenter Deploy Release ID
+      description: |
+        Appcenter Deploy Release ID
+      is_required: false
+      is_expand: true
+  - appcenter_release_page_url: $APPCENTER_RELEASE_PAGE_URL
+    opts:
+      title: Appcenter Deploy Release URL
+      summary: Appcenter Deploy Release URL
+      description: |
+        Appcenter Deploy Release URL
+      is_required: false
+      is_expand: true
 outputs:
   - EXAMPLE_STEP_OUTPUT:
     opts:
-      title: "Example Step Output"
+      title: 'Example Step Output'
       summary: Summary. No more than 2-3 sentences.
       description: |
         Description of this output.
