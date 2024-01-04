@@ -1,6 +1,9 @@
 package main
 
-import "strings"
+import (
+	"fmt"
+	"strings"
+)
 
 // Message is the message to be sent to Google Chat.
 // It contains a slice of CardCell, which contains a Card.
@@ -273,7 +276,7 @@ func WithCardDecoratedText(text string, label string, icon *string) Option {
 
 		c.CardMessage[0].Card.Sections[0].Widgets = append(c.CardMessage[0].Card.Sections[0].Widgets, Widget{
 			DecoratedText: &DecoratedText{
-				Text:      text,
+				Text:      fmt.Sprintf("<b>%s</b>", text),
 				TopLabel:  &label,
 				StartIcon: startIcon,
 			},
