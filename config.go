@@ -6,7 +6,7 @@ type Inputs struct {
 	WebhookUrl        stepconf.Secret `env:"webhook_url,required"`
 	WebhookUrlOnError stepconf.Secret `env:"webhook_url_on_error"`
 
-	AppTitle string `env:"bitrise_app_title,required"`
+	AppTitle string `env:"app_title,required"`
 
 	Text        string `env:"text"`
 	TextOnError string `env:"text_on_error"`
