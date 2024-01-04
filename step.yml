@@ -46,7 +46,7 @@ type_tags:
 # You can find more information about this in the documentation here:
 # https://devcenter.bitrise.io/en/steps-and-workflows/developing-your-own-bitrise-step/developing-a-new-step.html#setting-conditions-for-running-the-step
 #
-# is_always_run: false
+is_always_run: true
 # is_skippable: false
 # run_if: ""
 
@@ -92,14 +92,12 @@ inputs:
       is_required: false
       is_expand: true
   - message_text: |
-      Click <a href="https://iherb.com">here</a> to visit the build on bitrise.**
-      User this to mention someone <users/all>.
+      Click <a href="$BITRISE_BUILD_URL">here</a> to visit the build on bitrise.
     opts:
       title: Card Message
       summary: Card Message
       description: |
-        Card Message
-        https://developers.google.com/chat/format-messages#format-texts
+        Refer to [this](https://developers.google.com/chat/format-messages#card-formatting) for more information to format text in a card.
       is_required: false
       is_expand: true
   - message_decorated_text_list: |
@@ -109,21 +107,20 @@ inputs:
       title: Card Decorated Text
       summary: Card Decorated Text
       description: |
-        Card Decorated Text
-        https://developers.google.com/chat/format-messages#card-formatting
-        https://developers.google.com/chat/format-messages#builtinicons
+        Card Decorated Text, use | to separate the text and icon.
+        The format is: text | topLabel | builtin icon
+        [Here's the supported builtin icons](https://developers.google.com/chat/format-messages#builtinicons)
       is_required: false
       is_expand: true
   - message_button_list: |
       View Build | $BITRISE_BUILD_URL
       View App | $BITRISE_APP_URL
-      View Repo | $GIT_REPOSITORY_URL
     opts:
       title: Card Buttons
       summary: Card Buttons
       description: |
         Card Buttons
-        https://developers.google.com/chat/format-messages#builtinicons
+        The format is: button text | button url, please make sure the url is valid.
       is_required: false
       is_expand: true
 
