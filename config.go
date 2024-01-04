@@ -12,7 +12,7 @@ type Inputs struct {
 	MessageDecoratedTextList string `env:"message_decorated_text_list"`
 	MessageButtonList        string `env:"message_button_list"`
 
-	PipelineBuildStatus    string `env:"bitriseio_pipeline_build_status,required"`
+	PipelineBuildStatus    string `env:"bitriseio_pipeline_build_status"`
 	BuildStatus            string `env:"bitrise_build_status,required"`
 	TriggeredWorkflowTitle string `env:"bitrise_triggered_workflow_title,required"`
 
