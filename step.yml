@@ -65,24 +65,57 @@ toolkit:
     package_name: github.com/trevorwang/bitrise-step-send-google-chat-message
 
 inputs:
-  - google_chat_webhook_url: $GOOGLE_CHAT_WEBHOOK_URL
+  - webhook_url:
     opts:
-      title: Google Chat Webhook URL
-      summary: Google Chat Webhook URL
+      title: 'Google Chat Webhook URL'
       description: |
-        Google Chat Webhook URL
+        **Webhook\_url is required.**
+        To register an **Incoming WebHook integration** visit: https://developers.google.com/chat/how-tos/webhooks#create_a_webhook
       is_required: true
-      is_expand: true
       is_sensitive: true
-  - bitrise_app_title: $BITRISE_APP_TITLE
+  - webhook_url_on_error:
     opts:
-      title: Bitrise App Title
-      summary: Bitrise App Title
+      title: 'Google Chat Webhook URL if the build failed'
       description: |
-        Bitrise App Title
-      is_required: true
-      is_expand: true
-  - message_header: |
+        **Webhook\_url is used if this input is empty.**
+        To register an **Incoming WebHook integration** visit: https://developers.google.com/chat/how-tos/webhooks#create_a_webhook
+      is_required: false
+      is_sensitive: true
+      category: If Build Failed
+  ## Chat Text message
+
+  - text:
+    opts:
+      title: 'Text of the message.'
+      description: |
+        Text of the message to send.
+        Required unless you wish to send card message only.
+  - text_on_error:
+    opts:
+      title: 'Text of the message if the build failed'
+      description: |
+        This option will be used if the build failed. If you
+        leave this option empty then the default one will be used.
+      category: If Build Failed
+
+  ## Chat Card Message
+
+  - icon_url: 'https://github.com/bitrise-io.png'
+    opts:
+      title: 'Message icon'
+      description: |
+        Optionally, you can specify a custom icon image URL
+        which will be presented as the card header icon.
+
+  - icon_url_on_error: 'https://github.com/bitrise-io.png'
+    opts:
+      title: 'Message icon if the build failed'
+      description: |
+        This option will be used if the build failed. If you
+        leave this option empty then the default one will be used.
+      category: If Build Failed
+
+  - card_header: |
       $BITRISE_APP_TITLE - $BITRISE_TRIGGERED_WORKFLOW_TITLE - built $BITRISEIO_PIPELINE_BUILD_STATUS
     opts:
       title: Message Header
@@ -91,7 +124,7 @@ inputs:
         Message Header
       is_required: false
       is_expand: true
-  - message_text: |
+  - card_text: |
       Click <a href="$BITRISE_BUILD_URL">here</a> to visit the build on bitrise.
     opts:
       title: Card Message
@@ -100,50 +133,71 @@ inputs:
         Refer to [this](https://developers.google.com/chat/format-messages#card-formatting) for more information to format text in a card.
       is_required: false
       is_expand: true
-  - message_decorated_text_list: |
+
+  - image_url:
+    opts:
+      title: 'A URL to an image file that will be displayed inside the attachment'
+      description: |
+        A URL to an image file that will be displayed inside the attachment.
+
+        Supported formats: GIF, JPEG, PNG, and BMP.
+        Large images will be resized to a maximum width of 400px or a maximum height of 500px.
+  - image_url_on_error:
+    opts:
+      title: 'Image URL if build failed'
+      description: |
+        This option will be used if the build failed. If you
+        leave this option empty then the default one will be used.
+      category: If Build Failed
+
+  - card_decorated_text_list: |
       ${BITRISE_APP_TITLE}|App | INVITE
       $BITRISE_GIT_BRANCH | Branch  | AIRPLANE
       $BITRISE_GIT_MESSAGE | Message  | BUS
       ${BITRISE_TRIGGERED_WORKFLOW_ID} | Workflow | DESCRIPTION
     opts:
-      title: Card Decorated Text
-      summary: Card Decorated Text
+      title: 'A list of fields to be displayed in a table inside the attachment'
       description: |
-        Card Decorated Text, use | to separate the text and icon.
-        The format is: text | topLabel | builtin icon
+        Decorated text list separated by newlines and each field contains a `value`, a `title` and a `icon`.
+        The `value` and the `title` fields are separated by a pipe `|` character.
+
+        The *title* shown as a heading above the `value` text.
+        The *value* is the text value of the text.
+        The *icon* is the icon to display in the front of the text.
+
         [Here's the supported builtin icons](https://developers.google.com/chat/format-messages#builtinicons)
       is_required: false
       is_expand: true
-  - message_button_list: |
+  - card_buttons: |
       View App|${BITRISE_APP_URL}
-      View Pipeline Build|${BITRISEIO_PIPELINE_BUILD_URL}
       View Workflow Build|${BITRISE_BUILD_URL}
       Install Page|${BITRISE_PUBLIC_INSTALL_PAGE_URL}
     opts:
-      title: Card Buttons
-      summary: Card Buttons
+      title: 'A list of buttons attached to the message as link buttons'
       description: |
-        Card Buttons
-        The format is: button text | button url, please make sure the url is valid.
-      is_required: false
-      is_expand: true
+        Buttons separated by newlines and each field contains a `text` and a `url`.
+        The `text` and the `url` fields are separated by a pipe `|` character.
+        Empty lines and lines without a separator are omitted.
 
-  - bitriseio_pipeline_build_status: $BITRISEIO_PIPELINE_BUILD_STATUS
+        The *text* is the label for the button.
+        The *url* is the fully qualified http or https url to deliver users to.
+
+  # Status Inputs
+
+  - pipeline_build_status: '$BITRISEIO_PIPELINE_BUILD_STATUS'
     opts:
-      title: Bitrise Pipeline Build Status
-      summary: Bitrise Pipeline Build Status
+      title: 'Pipeline Build Status'
+      summary: 'It uses the build state as if the Pipeline Build had finished with the previous stage (if applicable)'
       description: |
-        Bitrise Pipeline Build Status
-      is_required: false
-      is_expand: true
-  - bitrise_build_status: $BITRISE_BUILD_STATUS
+        This status will be used to help choosing between _on_error inputs and normal ones when sending the message.
+      is_dont_change_value: true
+  - build_status: '$BITRISE_BUILD_STATUS'
     opts:
-      title: Bitrise Build Status
-      summary: Bitrise Build Status
+      title: 'Build Status'
+      summary: 'It sets the build state as if the Build had finished already'
       description: |
-        Bitrise Build Status
-      is_required: true
-      is_expand: true
+        This status will be used to help choosing between _on_error inputs and normal ones.
+      is_dont_change_value: true
 
   - bitrise_triggered_workflow_title: $BITRISE_TRIGGERED_WORKFLOW_TITLE
     opts:
@@ -154,6 +208,7 @@ inputs:
       is_required: false
       is_expand: true
 
+  ## build info from bitrise API
   - bitrise_personal_access_token: $BITRISE_PERSONAL_ACCESS_TOKEN
     opts:
       title: Bitrise Personal Access Token
@@ -169,7 +224,7 @@ inputs:
       summary: Bitrise App Slug
       description: |
         Bitrise App Slug
-      is_required: true
+      is_required: false
       is_expand: true
   - bitrise_build_slug: $BITRISE_BUILD_SLUG
     opts:
@@ -177,7 +232,7 @@ inputs:
       summary: Bitrise Build Slug
       description: |
         Bitrise Build Slug
-      is_required: true
+      is_required: false
       is_expand: true
 outputs:
   - EXAMPLE_STEP_OUTPUT:
