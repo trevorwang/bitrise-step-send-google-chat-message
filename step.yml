@@ -70,7 +70,7 @@ inputs:
       title: 'Google Chat Webhook URL'
       description: |
         **Webhook\_url is required.**
-        To register an **Incoming WebHook integration** visit: https://developers.google.com/chat/how-tos/webhooks#create_a_webhook
+        To register an **Incoming WebHook integration** visit: [https://developers.google.com/chat/how-tos/webhooks#create_a_webhook](https://developers.google.com/chat/format-messages#card-formatting)
       is_required: true
       is_sensitive: true
   - webhook_url_on_error:
@@ -78,7 +78,7 @@ inputs:
       title: 'Google Chat Webhook URL if the build failed'
       description: |
         **Webhook\_url is used if this input is empty.**
-        To register an **Incoming WebHook integration** visit: https://developers.google.com/chat/how-tos/webhooks#create_a_webhook
+        To register an **Incoming WebHook integration** visit: [https://developers.google.com/chat/how-tos/webhooks#create_a_webhook](https://developers.google.com/chat/how-tos/webhooks#create_a_webhook)
       is_required: false
       is_sensitive: true
       category: If Build Failed
@@ -136,7 +136,7 @@ inputs:
       title: Card Message
       summary: Card Message
       description: |
-        Refer to [this](https://developers.google.com/chat/format-messages#card-formatting) for more information to format text in a card.
+        Refer to [https://developers.google.com/chat/format-messages#card-formatting](https://developers.google.com/chat/format-messages#card-formatting) for more information to format text in a card.
       is_required: false
       is_expand: true
 
