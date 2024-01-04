@@ -133,7 +133,7 @@ inputs:
       summary: Bitrise Pipeline Build Status
       description: |
         Bitrise Pipeline Build Status
-      is_required: true
+      is_required: false
       is_expand: true
   - bitrise_build_status: $BITRISE_BUILD_STATUS
     opts:
@@ -150,7 +150,7 @@ inputs:
       summary: Bitrise Triggered Workflow Title
       description: |
         Bitrise Triggered Workflow Title
-      is_required: true
+      is_required: false
       is_expand: true
 
   - bitrise_personal_access_token: $BITRISE_PERSONAL_ACCESS_TOKEN
