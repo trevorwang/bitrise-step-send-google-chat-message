@@ -101,6 +101,9 @@ inputs:
       is_required: false
       is_expand: true
   - message_decorated_text_list: |
+      ${BITRISE_APP_TITLE}|App
+      ${BITRISEIO_PIPELINE_TITLE} | Pipeline
+      ${BITRISE_TRIGGERED_WORKFLOW_ID} | Workflow
       $BITRISE_GIT_BRANCH | Branch  | AIRPLANE
       $BITRISE_GIT_MESSAGE | Message  | BUS
     opts:
@@ -113,8 +116,10 @@ inputs:
       is_required: false
       is_expand: true
   - message_button_list: |
-      View Build | $BITRISE_BUILD_URL
-      View App | $BITRISE_APP_URL
+      View App|${BITRISE_APP_URL}
+      View Pipeline Build|${BITRISEIO_PIPELINE_BUILD_URL}
+      View Workflow Build|${BITRISE_BUILD_URL}
+      Install Page|${BITRISE_PUBLIC_INSTALL_PAGE_URL}
     opts:
       title: Card Buttons
       summary: Card Buttons
