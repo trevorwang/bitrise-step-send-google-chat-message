@@ -47,7 +47,7 @@ type_tags:
 # https://devcenter.bitrise.io/en/steps-and-workflows/developing-your-own-bitrise-step/developing-a-new-step.html#setting-conditions-for-running-the-step
 #
 is_always_run: true
-# is_skippable: false
+is_skippable: true
 # run_if: ""
 
 # Use the `deps` property to declare dependencies that you can fetch from an OS dependency manager.
@@ -101,11 +101,10 @@ inputs:
       is_required: false
       is_expand: true
   - message_decorated_text_list: |
-      ${BITRISE_APP_TITLE}|App
-      ${BITRISEIO_PIPELINE_TITLE} | Pipeline
-      ${BITRISE_TRIGGERED_WORKFLOW_ID} | Workflow
+      ${BITRISE_APP_TITLE}|App | INVITE
       $BITRISE_GIT_BRANCH | Branch  | AIRPLANE
       $BITRISE_GIT_MESSAGE | Message  | BUS
+      ${BITRISE_TRIGGERED_WORKFLOW_ID} | Workflow | DESCRIPTION
     opts:
       title: Card Decorated Text
       summary: Card Decorated Text
