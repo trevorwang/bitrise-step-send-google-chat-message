@@ -9,10 +9,11 @@ import (
 
 func (r ChatRunner) SendMessage(webhookUrl string, message *Message) {
 	if ChatDebugable {
-		body, _ := json.MarshalIndent(message, "", "  ")
+		r.logger.Debugf("messaeg: %#v", message)
+		body, _ := jsonMarshal(message)
 		r.logger.Debugf(string(body))
 	}
-	messageBytes, err := json.Marshal(message)
+	messageBytes, err := jsonMarshal(message)
 	if err != nil {
 		r.logger.Errorf("Error occurred while marshalling message: %s", err)
 	}
@@ -40,4 +41,14 @@ func (r ChatRunner) SendMessage(webhookUrl string, message *Message) {
 		msg, _ := io.ReadAll(resp.Body)
 		r.logger.Errorf("Non-OK HTTP status: %s \n %s", resp.Status, msg)
 	}
+}
+
+func jsonMarshal(v any) ([]byte, error) {
+	buf := new(bytes.Buffer)
+	enc := json.NewEncoder(buf)
+	enc.SetEscapeHTML(false)
+	if err := enc.Encode(v); err != nil {
+		return nil, err
+	}
+	return buf.Bytes(), nil
 }

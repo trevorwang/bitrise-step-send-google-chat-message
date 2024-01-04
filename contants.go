@@ -2,6 +2,6 @@ package main
 
 const (
 	Debugable        = true
-	ChatDebugable    = false
+	ChatDebugable    = true
 	BitriseDebugable = false
 )

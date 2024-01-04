@@ -1,20 +1,18 @@
 package main
 
-import (
-	"fmt"
-)
+import "strings"
 
 // Message is the message to be sent to Google Chat.
 // It contains a slice of CardCell, which contains a Card.
 type Message struct {
-	Name            string       `json:"name,omitempty"`
-	Sender          *User        `json:"sender,omitempty"`
-	CreatedTime     string       `json:"createTime,omitempty"`
-	LastUpdatedTime string       `json:"lastUpdateTime,omitempty"`
-	DeleteTime      string       `json:"deleteTime,omitempty"`
-	Text            string       `json:"text,omitempty"`
-	FormattedText   string       `json:"formattedText,omitempty"`
-	CardMessage     []CardWithId `json:"cardsV2,omitempty"`
+	Name string `json:"name,omitempty"`
+	// Sender          *User        `json:"sender,omitempty"`
+	// CreatedTime     string       `json:"createTime,omitempty"`
+	// LastUpdatedTime string       `json:"lastUpdateTime,omitempty"`
+	// DeleteTime      string       `json:"deleteTime,omitempty"`
+	Text string `json:"text,omitempty"`
+	// FormattedText string       `json:"formattedText,omitempty"`
+	CardMessage []CardWithId `json:"cardsV2,omitempty"`
 }
 
 // User is the user who sends the message.
@@ -124,7 +122,7 @@ type TextParagraph struct {
 type DecoratedText struct {
 	Icon      *Icon    `json:"icon,omitempty"`
 	StartIcon *Icon    `json:"startIcon,omitempty"`
-	TopLabel  string   `json:"topLabel,omitempty"`
+	TopLabel  *string  `json:"topLabel,omitempty"`
 	Text      string   `json:"text,omitempty"`
 	WrapText  bool     `json:"wrapText,omitempty"`
 	OnClick   *OnClick `json:"onClick,omitempty"`
@@ -153,11 +151,11 @@ type Button struct {
 	AltText  string   `json:"altText"`
 }
 
-type ImaegType string
+type ImageType string
 
 const (
-	Square ImaegType = "SQUARE"
-	Circle ImaegType = "CIRCLE"
+	Square ImageType = "SQUARE"
+	Circle ImageType = "CIRCLE"
 )
 
 // Icon is the icon to be sent to Google Chat.
@@ -166,7 +164,7 @@ const (
 // ImaegType is the type of the icon.
 type Icon struct {
 	AltText   string    `json:"altText,omitempty"`
-	ImaegType ImaegType `json:"imaegType,omitempty"`
+	ImaegType ImageType `json:"imaegType,omitempty"`
 	// Union field icons can be only one of the following:
 	IconUrl   string `json:"iconUrl,omitempty"`
 	KnownIcon string `json:"knownIcon,omitempty"`
@@ -198,7 +196,10 @@ type OpenLink struct {
 // CardHeader is the header of the card.
 // It contains a string. The string is the title of the header.
 type CardHeader struct {
-	Title string `json:"title"`
+	Title     string     `json:"title"`
+	Subtitle  *string    `json:"subtitle,omitempty"`
+	ImageUrl  *string    `json:"imageUrl,omitempty"`
+	ImageType *ImageType `json:"imageType,omitempty"`
 }
 
 type Option func(*Message)
@@ -249,16 +250,21 @@ func WithCardText(text string) Option {
 	}
 }
 
-func WithCardIconText(label string, text string) Option {
+func WithCardDecoratedText(text string, label string, icon *string) Option {
 	return func(c *Message) {
 		c.assertWidgets()
+		var startIcon *Icon
+		if icon != nil {
+			startIcon = &Icon{
+				KnownIcon: strings.TrimSpace(*icon),
+			}
+		}
+
 		c.CardMessage[0].Card.Sections[0].Widgets = append(c.CardMessage[0].Card.Sections[0].Widgets, Widget{
 			DecoratedText: &DecoratedText{
-				Text:     fmt.Sprintf("<b>%s</b>", text),
-				TopLabel: label,
-				StartIcon: &Icon{
-					KnownIcon: "FLIGHT_DEPARTURE",
-				},
+				Text:      text,
+				TopLabel:  &label,
+				StartIcon: startIcon,
 			},
 		})
 	}
@@ -304,7 +310,7 @@ func (r ChatRunner) NewMessage(content Card) *Message {
 
 func (r ChatRunner) NewMessageWithText(text string, header string) *Message {
 	return r.NewMessage(Card{
-		Header: CardHeader{header},
+		Header: CardHeader{Title: header},
 		Sections: []Section{
 			{
 				Widgets: []Widget{
