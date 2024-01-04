@@ -3,17 +3,25 @@ package main
 import "github.com/bitrise-io/go-steputils/stepconf"
 
 type Inputs struct {
-	WebhookUrl stepconf.Secret `env:"google_chat_webhook_url,required"`
+	WebhookUrl        stepconf.Secret `env:"webhook_url,required"`
+	WebhookUrlOnError stepconf.Secret `env:"webhook_url_on_error"`
 
 	AppTitle string `env:"bitrise_app_title,required"`
 
-	MessageHeader            string `env:"message_header"`
-	MessageText              string `env:"message_text"`
-	MessageDecoratedTextList string `env:"message_decorated_text_list"`
-	MessageButtonList        string `env:"message_button_list"`
+	Text        string `env:"text"`
+	TextOnError string `env:"text_on_error"`
 
-	PipelineBuildStatus    string `env:"bitriseio_pipeline_build_status"`
-	BuildStatus            string `env:"bitrise_build_status,required"`
+	IconUrl               string `env:"icon_url"`
+	IconUrlOnErorr        string `env:"icon_url_on_error"`
+	CardHeader            string `env:"card_header"`
+	CardText              string `env:"card_text"`
+	ImageUrl              string `env:"image_url"`
+	ImageUrlOnError       string `env:"image_url_on_error"`
+	CardDecoratedTextList string `env:"card_decorated_text_list"`
+	CardButtonList        string `env:"card_buttons"`
+
+	PipelineBuildStatus    string `env:"pipeline_build_status"`
+	BuildStatus            string `env:"build_status,required"`
 	TriggeredWorkflowTitle string `env:"bitrise_triggered_workflow_title,required"`
 
 	PersonalToken stepconf.Secret `env:"bitrise_personal_access_token"`
