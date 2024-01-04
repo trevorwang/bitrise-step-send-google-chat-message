@@ -82,8 +82,14 @@ inputs:
       is_required: false
       is_sensitive: true
       category: If Build Failed
-  ## Chat Text message
 
+  - app_title: '$BITRISE_APP_TITLE'
+    opts:
+      title: 'App Title'
+      summary: 'App Title'
+      description: |
+        App Title
+  ## Chat Text message
   - text:
     opts:
       title: 'Text of the message.'
