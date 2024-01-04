@@ -95,8 +95,8 @@ type Image struct {
 // CardHeader is the header of the card.
 // CardSection is the section of the card.
 type Card struct {
-	Header   CardHeader `json:"header,omitempty"`
-	Sections []Section  `json:"sections,omitempty"`
+	Header   *CardHeader `json:"header,omitempty"`
+	Sections []Section   `json:"sections,omitempty"`
 }
 
 // Section is the section of the card.
@@ -233,10 +233,12 @@ func WithMessageText(text string) Option {
 	}
 }
 
-func WithCardHeader(title string) Option {
+func WithCardHeader(title string, iconUrl string) Option {
 	return func(c *Message) {
 		c.assertCardCell()
-		c.CardMessage[0].Card.Header.Title = title
+		card := c.CardMessage[0].Card
+		card.Header.Title = title
+		card.Header.ImageUrl = &iconUrl
 
 	}
 }
@@ -246,6 +248,15 @@ func WithCardText(text string) Option {
 		c.assertWidgets()
 		c.CardMessage[0].Card.Sections[0].Widgets = append(c.CardMessage[0].Card.Sections[0].Widgets,
 			Widget{TextParagraph: &TextParagraph{Text: text}},
+		)
+	}
+}
+
+func WithCardImage(url string) Option {
+	return func(c *Message) {
+		c.assertWidgets()
+		c.CardMessage[0].Card.Sections[0].Widgets = append(c.CardMessage[0].Card.Sections[0].Widgets,
+			Widget{Image: &Image{ImageUrl: url}},
 		)
 	}
 }
@@ -310,7 +321,7 @@ func (r ChatRunner) NewMessage(content Card) *Message {
 
 func (r ChatRunner) NewMessageWithText(text string, header string) *Message {
 	return r.NewMessage(Card{
-		Header: CardHeader{Title: header},
+		Header: &CardHeader{Title: header},
 		Sections: []Section{
 			{
 				Widgets: []Widget{

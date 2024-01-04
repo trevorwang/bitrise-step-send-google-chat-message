@@ -15,6 +15,7 @@ func (r ChatRunner) Run(cfg *Config) exit.ExitCode {
 	ops := []Option{}
 	ops = r.createCardHeader(cfg, ops)
 	ops = r.createCartText(cfg, ops)
+	ops = r.createCardImage(cfg, ops)
 	ops = r.createDecoratedTextList(cfg, ops)
 	ops = r.createBuildInfo(cfg, ops)
 	ops = r.createButtonList(cfg, ops)
@@ -25,23 +26,42 @@ func (r ChatRunner) Run(cfg *Config) exit.ExitCode {
 	return exit.Success
 }
 
+func (cfg *Config) isBuiltFailed() bool {
+	return cfg.BuildStatus == "1"
+}
+
+func (ChatRunner) createCardImage(cfg *Config, ops []Option) []Option {
+	imageUrl := cfg.ImageUrl
+	if cfg.isBuiltFailed() && cfg.ImageUrlOnError != "" {
+		imageUrl = cfg.ImageUrlOnError
+	}
+	if imageUrl != "" {
+		ops = append(ops, WithCardImage(cfg.ImageUrl))
+	}
+	return ops
+}
+
 func (ChatRunner) createCartText(cfg *Config, ops []Option) []Option {
-	if cfg.MessageText != "" {
-		ops = append(ops, WithCardText(cfg.MessageText))
+	if cfg.CardText != "" {
+		ops = append(ops, WithCardText(cfg.CardText))
 	}
 	return ops
 }
 
 func (ChatRunner) createCardHeader(cfg *Config, ops []Option) []Option {
-	if cfg.MessageHeader != "" {
-		ops = append(ops, WithCardHeader(cfg.MessageHeader))
+	if cfg.CardHeader != "" {
+		iconUrl := cfg.IconUrl
+		if cfg.isBuiltFailed() && cfg.IconUrlOnErorr != "" {
+			iconUrl = cfg.IconUrlOnErorr
+		}
+		ops = append(ops, WithCardHeader(cfg.CardHeader, iconUrl))
 	}
 	return ops
 }
 
 func (r ChatRunner) createDecoratedTextList(cfg *Config, ops []Option) []Option {
-	if cfg.MessageDecoratedTextList != "" {
-		lines := strings.Split(cfg.MessageDecoratedTextList, "\n")
+	if cfg.CardDecoratedTextList != "" {
+		lines := strings.Split(cfg.CardDecoratedTextList, "\n")
 		for _, line := range lines {
 			line = strings.TrimSpace(line)
 			if line == "" {
@@ -85,8 +105,8 @@ func (r ChatRunner) createBuildInfo(cfg *Config, ops []Option) []Option {
 }
 
 func (r ChatRunner) createButtonList(cfg *Config, ops []Option) []Option {
-	if cfg.MessageButtonList != "" {
-		lines := strings.Split(cfg.MessageButtonList, "\n")
+	if cfg.CardButtonList != "" {
+		lines := strings.Split(cfg.CardButtonList, "\n")
 		for _, line := range lines {
 			line = strings.TrimSpace(line)
 			r.logger.Debugf("button item : %s", line)
