@@ -168,7 +168,7 @@ inputs:
         The `value` and the `title` fields are separated by a pipe `|` character.
 
         The *title* shown as a heading above the `value` text.
-        The *value* is the text value of the text.
+        The *value* is the text value of the text and is displayed in bold style.
         The *icon* is the icon to display in the front of the text.
 
         [Here's the supported builtin icons](https://developers.google.com/chat/format-messages#builtinicons)
