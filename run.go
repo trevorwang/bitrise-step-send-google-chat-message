@@ -58,12 +58,12 @@ func (r ChatRunner) Run(cfg *Config) exit.ExitCode {
 				break
 			}
 			if len(decoratedText) == 2 {
-
-				if strings.TrimSpace(decoratedText[1]) == "" {
-					r.logger.Errorf("invalid button link: %s", decoratedText[1])
+				link := strings.TrimSpace(decoratedText[1])
+				if link == "" {
+					r.logger.Errorf("invalid button link: %s", link)
 				}
 
-				ops = append(ops, WithCardButton(decoratedText[0], decoratedText[1]))
+				ops = append(ops, WithCardButton(decoratedText[0], link))
 				// } else if len(decoratedText) == 3 {
 				// ops = append(ops, WithCardDecoratedText(decoratedText[0], &decoratedText[1], &decoratedText[2]))
 			}
