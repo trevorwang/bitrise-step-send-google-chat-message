@@ -83,7 +83,7 @@ inputs:
       is_required: true
       is_expand: true
   - message_header: |
-      $BITRISE_APP_TITLE - $BITRISE_TRIGGERED_WORKFLOW_TITLE
+      $BITRISE_APP_TITLE - $BITRISE_TRIGGERED_WORKFLOW_TITLE - built $BITRISEIO_PIPELINE_BUILD_STATUS
     opts:
       title: Message Header
       summary: Message Header
