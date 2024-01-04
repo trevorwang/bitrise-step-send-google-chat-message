@@ -236,10 +236,10 @@ func WithMessageText(text string) Option {
 func WithCardHeader(title string, iconUrl string) Option {
 	return func(c *Message) {
 		c.assertCardCell()
-		card := c.CardMessage[0].Card
-		card.Header.Title = title
-		card.Header.ImageUrl = &iconUrl
-
+		c.CardMessage[0].Card.Header = &CardHeader{
+			Title:    title,
+			ImageUrl: &iconUrl,
+		}
 	}
 }
 
