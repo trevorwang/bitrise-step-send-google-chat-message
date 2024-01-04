@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"strings"
 
 	exit "github.com/bitrise-io/go-utils/v2/exitcode"
@@ -14,15 +13,33 @@ func (r ChatRunner) Run(cfg *Config) exit.ExitCode {
 	}
 
 	ops := []Option{}
+	ops = r.createCardHeader(cfg, ops)
+	ops = r.createCartText(cfg, ops)
+	ops = r.createDecoratedTextList(cfg, ops)
+	ops = r.createBuildInfo(cfg, ops)
+	ops = r.createButtonList(cfg, ops)
 
-	if cfg.MessageHeader != "" {
-		ops = append(ops, WithCardHeader(cfg.MessageHeader))
-	}
+	chatMsg := r.NewMessageWithOption(ops...)
 
+	r.SendMessage(string(cfg.WebhookUrl), chatMsg)
+	return exit.Success
+}
+
+func (ChatRunner) createCartText(cfg *Config, ops []Option) []Option {
 	if cfg.MessageText != "" {
 		ops = append(ops, WithCardText(cfg.MessageText))
 	}
+	return ops
+}
 
+func (ChatRunner) createCardHeader(cfg *Config, ops []Option) []Option {
+	if cfg.MessageHeader != "" {
+		ops = append(ops, WithCardHeader(cfg.MessageHeader))
+	}
+	return ops
+}
+
+func (r ChatRunner) createDecoratedTextList(cfg *Config, ops []Option) []Option {
 	if cfg.MessageDecoratedTextList != "" {
 		lines := strings.Split(cfg.MessageDecoratedTextList, "\n")
 		for _, line := range lines {
@@ -43,7 +60,31 @@ func (r ChatRunner) Run(cfg *Config) exit.ExitCode {
 
 		}
 	}
+	return ops
+}
 
+func (r ChatRunner) createBuildInfo(cfg *Config, ops []Option) []Option {
+	if cfg.PersonalToken != "" {
+		api := BitriseApi{string(cfg.PersonalToken), r.logger}
+
+		build, err := api.GetBuildInfo(cfg.AppSlug, cfg.BuildSlug)
+		if err != nil {
+			r.logger.Errorf("Failed to get build info: %s", err)
+		}
+		r.logger.Debugf("build: %#v", build)
+		build = build.ChangeTimeZone()
+
+		clickIcon := "CLOCK"
+		triggeredByIcon := "PERSON"
+		ops = append(ops,
+			WithCardDecoratedText(build.TriggeredBy, "Triggered By", &triggeredByIcon),
+			WithCardDecoratedText(build.TriggeredAt, "Triggered At", &clickIcon),
+		)
+	}
+	return ops
+}
+
+func (r ChatRunner) createButtonList(cfg *Config, ops []Option) []Option {
 	if cfg.MessageButtonList != "" {
 		lines := strings.Split(cfg.MessageButtonList, "\n")
 		for _, line := range lines {
@@ -62,49 +103,9 @@ func (r ChatRunner) Run(cfg *Config) exit.ExitCode {
 				if link == "" {
 					r.logger.Errorf("invalid button link: %s", link)
 				}
-
 				ops = append(ops, WithCardButton(decoratedText[0], link))
-				// } else if len(decoratedText) == 3 {
-				// ops = append(ops, WithCardDecoratedText(decoratedText[0], &decoratedText[1], &decoratedText[2]))
 			}
-
 		}
 	}
-
-	if cfg.PersonalToken != "" {
-		api := BitriseApi{string(cfg.PersonalToken), r.logger}
-
-		// Get build info
-		build, err := api.GetBuildInfo(cfg.AppSlug, cfg.BuildSlug)
-		if err != nil {
-			r.logger.Errorf("Failed to get build info: %s", err)
-		}
-		r.logger.Debugf("build: %#v", build)
-		build = build.ChangeTimeZone()
-
-		ops = append(ops,
-			WithCardDecoratedText(build.TriggeredBy, "Triggered By", nil),
-			WithCardDecoratedText(build.TriggeredAt, "Triggered At", nil),
-		)
-	}
-
-	r.logger.Debugf("webhook url: %#v", cfg.WebhookUrl)
-
-	text := fmt.Sprintf("%s is built successfully", cfg.AppTitle)
-
-	// if cfg.AppCenterId != "" {
-	// 	ops = append(ops, WithCardText(fmt.Sprintf("%s has been released to AppCenter. And the download link is here: %s", cfg.AppTitle, cfg.AppCenterUrl)))
-	// 	ops = append(ops, WithCardIconText("AppCenter App", cfg.AppCenterId))
-	// }
-	ops = append(ops,
-		// WithMessageText(text),
-		WithCardHeader(text),
-		// WithCardDecoratedText(cfg.GitBranch, "Branch", nil),
-		// WithCardDecoratedText(cfg.GitMessage, "Last Commit Message", nil),
-	)
-
-	chatMsg := r.NewMessageWithOption(ops...)
-
-	r.SendMessage(string(cfg.WebhookUrl), chatMsg)
-	return exit.Success
+	return ops
 }
