@@ -104,6 +104,11 @@ inputs:
         `monospace text` is an example of monospace text.
         ```preformatted text``` is an example of preformatted text.
         Visit [https://developers.google.com/chat/format-messages#format-texts](https://developers.google.com/chat/format-messages#format-texts) to find how to format text.
+        Example: 
+
+        ```markdown
+           <users/all> *$BITRISE_APP_TITLE* build (<$BITRISE_BUILD_URL|$BITRISE_BUILD_NUMBER>) has been started by xxxx on branch *$BITRISE_GIT_BRANCH*.
+        ```
   - text_on_error:
     opts:
       title: 'Text of the message if the build failed'
