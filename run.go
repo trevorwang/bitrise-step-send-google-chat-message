@@ -13,6 +13,8 @@ func (r ChatRunner) Run(cfg *Config) exit.ExitCode {
 	}
 
 	ops := []Option{}
+
+	ops = r.createMessageText(cfg, ops)
 	ops = r.createCardHeader(cfg, ops)
 	ops = r.createCartText(cfg, ops)
 	ops = r.createCardImage(cfg, ops)
@@ -24,6 +26,17 @@ func (r ChatRunner) Run(cfg *Config) exit.ExitCode {
 
 	r.SendMessage(string(cfg.WebhookUrl), chatMsg)
 	return exit.Success
+}
+
+func (ChatRunner) createMessageText(cfg *Config, ops []Option) []Option {
+	text := cfg.Text
+	if cfg.isBuiltFailed() && cfg.TextOnError != "" {
+		text = cfg.TextOnError
+	}
+	if text != "" {
+		ops = append(ops, WithMessageText(text))
+	}
+	return ops
 }
 
 func (cfg *Config) isBuiltFailed() bool {

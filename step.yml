@@ -96,12 +96,34 @@ inputs:
       description: |
         Text of the message to send.
         Required unless you wish to send card message only.
+        `<https://example.com|Example website>` is an example of a link.
+
+        `<users/all>` is an example to mention all in the chat.
+
+        `*bold text*`` is an example of bold text.
+
+        `_italic text_` is an example of italic text.
+
+        `~strikethrough text~` is an example of strikethrough text.
+
+        `monospace text` is an example of monospace text.
+
+        ```preformatted text``` is an example of preformatted text.
+
+        Visit [https://developers.google.com/chat/format-messages#format-texts](https://developers.google.com/chat/format-messages#format-texts) to find how to format text.
+
+        Example: 
+
+        ```markdown
+           <users/all> *$BITRISE_APP_TITLE* build (<$BITRISE_BUILD_URL|$BITRISE_BUILD_NUMBER>) has been started by xxxx on branch *$BITRISE_GIT_BRANCH*.
+        ```
   - text_on_error:
     opts:
       title: 'Text of the message if the build failed'
       description: |
         This option will be used if the build failed. If you
         leave this option empty then the default one will be used.
+        see [Text of the message](#text-of-the-message) for more information.
       category: If Build Failed
 
   ## Chat Card Message
@@ -160,7 +182,7 @@ inputs:
       ${BITRISE_APP_TITLE}|App | INVITE
       $BITRISE_GIT_BRANCH | Branch  | AIRPLANE
       $BITRISE_GIT_MESSAGE | Message  | BUS
-      ${BITRISE_TRIGGERED_WORKFLOW_ID} | Workflow | DESCRIPTION
+      ${BITRISE_TRIGGERED_WORKFLOW_TITLE} | Workflow | DESCRIPTION
     opts:
       title: 'A list of fields to be displayed in a table inside the attachment'
       description: |
@@ -175,9 +197,8 @@ inputs:
       is_required: false
       is_expand: true
   - card_buttons: |
-      View App|${BITRISE_APP_URL}
-      View Workflow Build|${BITRISE_BUILD_URL}
-      Install Page|${BITRISE_PUBLIC_INSTALL_PAGE_URL}
+      View App in Bitrise|${BITRISE_APP_URL}
+      View Workflow Build in Bitrise|${BITRISE_BUILD_URL}
     opts:
       title: 'A list of buttons attached to the message as link buttons'
       description: |
@@ -252,12 +273,12 @@ inputs:
         Bitrise Build Slug
       is_required: false
       is_expand: true
-outputs:
-  - EXAMPLE_STEP_OUTPUT:
-    opts:
-      title: 'Example Step Output'
-      summary: Summary. No more than 2-3 sentences.
-      description: |
-        Description of this output.
+# outputs:
+#   - EXAMPLE_STEP_OUTPUT:
+#     opts:
+#       title: 'Example Step Output'
+#       summary: Summary. No more than 2-3 sentences.
+#       description: |
+#         Description of this output.
 
-        Can be Markdown formatted text.
+#         Can be Markdown formatted text.
