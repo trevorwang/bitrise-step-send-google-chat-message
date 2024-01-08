@@ -214,6 +214,18 @@ inputs:
       is_required: false
       is_expand: true
 
+  - pretext: 'Build Succeeded!'
+    opts:
+      title: 'An optional text that appears in card header.'
+      description: 'An optional text that appears above the attachment block.'
+  - pretext_on_error: 'Build Failed!'
+    opts:
+      title: 'An optional text that appears in card header if the build failed'
+      description: |
+        This option will be used if the build failed. If you
+        leave this option empty then the default one will be used.
+      category: If Build Failed
+
   ## build info from bitrise API
   - bitrise_personal_access_token: $BITRISE_PERSONAL_ACCESS_TOKEN
     opts:
