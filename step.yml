@@ -96,14 +96,22 @@ inputs:
       description: |
         Text of the message to send.
         Required unless you wish to send card message only.
-        <https://example.com|Example website> is an example of a link.
-        <users/all> is an example to mention all in the chat.
-        *bold text* is an example of bold text.
-        _italic text_ is an example of italic text.
-        ~strikethrough text~ is an example of strikethrough text.
+        `<https://example.com|Example website>` is an example of a link.
+
+        `<users/all>` is an example to mention all in the chat.
+
+        `*bold text*`` is an example of bold text.
+
+        `_italic text_` is an example of italic text.
+
+        `~strikethrough text~` is an example of strikethrough text.
+
         `monospace text` is an example of monospace text.
+
         ```preformatted text``` is an example of preformatted text.
+
         Visit [https://developers.google.com/chat/format-messages#format-texts](https://developers.google.com/chat/format-messages#format-texts) to find how to format text.
+
         Example: 
 
         ```markdown
