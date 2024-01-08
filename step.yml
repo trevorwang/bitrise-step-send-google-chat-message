@@ -122,7 +122,7 @@ inputs:
       category: If Build Failed
 
   - card_header: |
-      $BITRISE_APP_TITLE - $BITRISE_TRIGGERED_WORKFLOW_TITLE - built $BITRISEIO_PIPELINE_BUILD_STATUS
+      $BITRISE_APP_TITLE
     opts:
       title: Message Header
       summary: Message Header
