@@ -23,6 +23,8 @@ type Inputs struct {
 	PipelineBuildStatus    string `env:"pipeline_build_status"`
 	BuildStatus            string `env:"build_status,required"`
 	TriggeredWorkflowTitle string `env:"bitrise_triggered_workflow_title,required"`
+	Pretext                string `env:"pretext"`
+	PretextOnError         string `env:"pretext_on_error"`
 
 	PersonalToken stepconf.Secret `env:"bitrise_personal_access_token"`
 	AppSlug       string          `env:"bitrise_app_slug,required"`

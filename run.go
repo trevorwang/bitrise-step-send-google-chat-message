@@ -49,12 +49,16 @@ func (ChatRunner) createCartText(cfg *Config, ops []Option) []Option {
 }
 
 func (ChatRunner) createCardHeader(cfg *Config, ops []Option) []Option {
+	pretext := cfg.Pretext
+	if cfg.isBuiltFailed() {
+		pretext = cfg.PretextOnError
+	}
 	if cfg.CardHeader != "" {
 		iconUrl := cfg.IconUrl
 		if cfg.isBuiltFailed() && cfg.IconUrlOnErorr != "" {
 			iconUrl = cfg.IconUrlOnErorr
 		}
-		ops = append(ops, WithCardHeader(cfg.CardHeader, iconUrl))
+		ops = append(ops, WithCardHeader(cfg.CardHeader+" "+pretext, iconUrl))
 	}
 	return ops
 }
