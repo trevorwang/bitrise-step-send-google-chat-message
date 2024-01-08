@@ -169,7 +169,7 @@ inputs:
       ${BITRISE_APP_TITLE}|App | INVITE
       $BITRISE_GIT_BRANCH | Branch  | AIRPLANE
       $BITRISE_GIT_MESSAGE | Message  | BUS
-      ${BITRISE_TRIGGERED_WORKFLOW_ID} | Workflow | DESCRIPTION
+      ${BITRISE_TRIGGERED_WORKFLOW_TITLE} | Workflow | DESCRIPTION
     opts:
       title: 'A list of fields to be displayed in a table inside the attachment'
       description: |
