@@ -139,6 +139,7 @@ func (r ChatRunner) createButtonList(cfg *Config, ops []Option) []Option {
 				link := strings.TrimSpace(decoratedText[1])
 				if link == "" {
 					r.logger.Errorf("invalid button link: %s", link)
+					break
 				}
 				ops = append(ops, WithCardButton(decoratedText[0], link))
 			}
