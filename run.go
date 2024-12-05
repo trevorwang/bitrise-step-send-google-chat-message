@@ -108,7 +108,7 @@ func (r ChatRunner) createBuildInfo(cfg *Config, ops []Option) []Option {
 		if err != nil {
 			r.logger.Errorf("Failed to get build info: %s", err)
 		}
-		r.logger.Debugf("build: %#v", build)
+		r.logger.Infof("build: %#v", build)
 		build = build.ChangeTimeZone()
 
 		clickIcon := "CLOCK"
