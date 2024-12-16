@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"io"
 	"net/http"
@@ -178,21 +179,27 @@ type BuildInfo struct {
 
 // OriginalBuildParams represents the nested "original_build_params" object.
 type OriginalBuildParams struct {
-	Branch                           string  `json:"branch,omitempty"`
-	BranchDest                       string  `json:"branch_dest,omitempty"`
-	BranchDestRepoOwner              string  `json:"branch_dest_repo_owner,omitempty"`
-	BranchRepoOwner                  string  `json:"branch_repo_owner,omitempty"`
-	CommitHash                       string  `json:"commit_hash,omitempty"`
-	CommitMessage                    string  `json:"commit_message,omitempty"`
-	PullRequestAuthor                string  `json:"pull_request_author,omitempty"`
-	PullRequestMergeBranch           string  `json:"pull_request_merge_branch,omitempty"`
-	PullRequestUnverifiedMergeBranch string  `json:"pull_request_unverified_merge_branch,omitempty"`
-	PullRequestHeadBranch            string  `json:"pull_request_head_branch,omitempty"`
-	PullRequestID                    *int    `json:"pull_request_id,omitempty"`
-	PullRequestRepositoryURL         string  `json:"pull_request_repository_url,omitempty"`
-	Tag                              *string `json:"tag,omitempty"`
-	Environments                     *string `json:"environments,omitempty"`
-	WorkflowID                       string  `json:"workflow_id,omitempty"`
+	Branch                           string        `json:"branch,omitempty"`
+	BranchDest                       string        `json:"branch_dest,omitempty"`
+	BranchDestRepoOwner              string        `json:"branch_dest_repo_owner,omitempty"`
+	BranchRepoOwner                  string        `json:"branch_repo_owner,omitempty"`
+	CommitHash                       string        `json:"commit_hash,omitempty"`
+	CommitMessage                    string        `json:"commit_message,omitempty"`
+	PullRequestAuthor                string        `json:"pull_request_author,omitempty"`
+	PullRequestMergeBranch           string        `json:"pull_request_merge_branch,omitempty"`
+	PullRequestUnverifiedMergeBranch string        `json:"pull_request_unverified_merge_branch,omitempty"`
+	PullRequestHeadBranch            string        `json:"pull_request_head_branch,omitempty"`
+	PullRequestID                    *int          `json:"pull_request_id,omitempty"`
+	PullRequestRepositoryURL         string        `json:"pull_request_repository_url,omitempty"`
+	Tag                              *string       `json:"tag,omitempty"`
+	Environments                     []Environment `json:"environments,omitempty"`
+	WorkflowID                       string        `json:"workflow_id,omitempty"`
+}
+
+type Environment struct {
+	IsExpand bool   `json:"is_expand"`
+	Key      string `json:"key"`
+	Value    string `json:"value"`
 }
 
 // BuildInfo represents the main structure of your JSON response.
@@ -291,13 +298,13 @@ func newRequest[T any](b *BitriseApi, req *http.Request) (*Response[T], error) {
 		return nil, err
 	}
 	defer resp.Body.Close()
+	bodyStr, _ := io.ReadAll(resp.Body)
 	if BitriseDebugable {
-		msg, _ := io.ReadAll(resp.Body)
-		b.logger.Printf(string(msg))
+		b.logger.Printf(string(bodyStr))
 	}
 
 	var data Response[T]
-	if err := json.NewDecoder(resp.Body).Decode(&data); err != nil {
+	if err := json.NewDecoder(bytes.NewReader(bodyStr)).Decode(&data); err != nil {
 		b.logger.Errorf("Error occurred while decoding response: %s", err)
 		return nil, err
 	}
